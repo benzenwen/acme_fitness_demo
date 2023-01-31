@@ -10,7 +10,7 @@ cart:
     icon: https://visualpharm.com/assets/690/Clear%20Shopping%20Cart-595b40b65ba036ed117d19bf.svg
   containers:
     cart:
-      image: gcr.io/vmwarecloudadvocacy/acmeshop-cart:1.3.1
+      image: gcr.io/vmwarecloudadvocacy/acmeshop-cart:latest
       ports:
       - '5000:5000'
   variables:
@@ -58,7 +58,7 @@ catalog:
     description: Part of ACME Fitness cloud demo.
     website: https://github.com/vmwarecloudadvocacy/acme_fitness_demo
     publisher: nooga
-    icon: https://visualpharm.com/assets/690/Clear%20Shopping%20Cart-595b40b65ba036ed117d19bf.svg
+    icon: https://visualpharm.com/assets/756/View-595b40b85ba036ed117dbd64.svg
   containers:
     catalog:
       image: gcr.io/vmwarecloudadvocacy/acmeshop-catalog:1.2.1
@@ -113,7 +113,7 @@ catalog-db:
     description: Part of ACME Fitness cloud demo.
     website: https://github.com/vmwarecloudadvocacy/acme_fitness_demo
     publisher: nooga
-    icon: https://visualpharm.com/assets/690/Clear%20Shopping%20Cart-595b40b65ba036ed117d19bf.svg
+    icon: https://visualpharm.com/assets/530/Database-595b40b75ba036ed117d7bf6.svg
   containers:
     db:
       image: gcr.io/vmwarecloudadvocacy/acmeshop-catalog-db:latest
@@ -138,10 +138,10 @@ front-end:
     description: Part of ACME Fitness cloud demo.
     website: https://github.com/vmwarecloudadvocacy/acme_fitness_demo
     publisher: nooga
-    icon: https://visualpharm.com/assets/690/Clear%20Shopping%20Cart-595b40b65ba036ed117d19bf.svg
+    icon: https://visualpharm.com/assets/939/Home%20Page-595b40b85ba036ed117dc19c.svg
   containers:
     app:
-      image: gcr.io/vmwarecloudadvocacy/acmeshop-front-end:2.2.0
+      image: gcr.io/vmwarecloudadvocacy/acmeshop-front-end:2.0.2
       ports:
       - '3000:3000'
   variables:
@@ -197,7 +197,7 @@ jaeger:
     description: Part of ACME Fitness cloud demo.
     website: https://github.com/vmwarecloudadvocacy/acme_fitness_demo
     publisher: nooga
-    icon: https://visualpharm.com/assets/690/Clear%20Shopping%20Cart-595b40b65ba036ed117d19bf.svg
+    icon: https://www.jaegertracing.io/img/jaeger-icon-reverse-color.svg
   containers:
     jaeger:
       image: jaegertracing/all-in-one:1.11
@@ -216,10 +216,10 @@ order:
     description: Part of ACME Fitness cloud demo.
     website: https://github.com/vmwarecloudadvocacy/acme_fitness_demo
     publisher: nooga
-    icon: https://visualpharm.com/assets/690/Clear%20Shopping%20Cart-595b40b65ba036ed117d19bf.svg
+    icon: https://visualpharm.com/assets/44/Shopping%20Cart-595b40b85ba036ed117dba8a.svg
   containers:
     order:
-      image: gcr.io/vmwarecloudadvocacy/order-postgres-tracing:3.0
+      image: gcr.io/vmwarecloudadvocacy/order-postgres-tracing:latest
       ports:
       - '6000:6000'
   variables:
@@ -283,10 +283,10 @@ payment:
     description: Part of ACME Fitness cloud demo.
     website: https://github.com/vmwarecloudadvocacy/acme_fitness_demo
     publisher: nooga
-    icon: https://visualpharm.com/assets/690/Clear%20Shopping%20Cart-595b40b65ba036ed117d19bf.svg
+    icon: https://visualpharm.com/assets/416/Coins-595b40b65ba036ed117d19f4.svg
   containers:
     payment:
-      image: gcr.io/vmwarecloudadvocacy/acmeshop-payment:4.6
+      image: gcr.io/vmwarecloudadvocacy/acmeshop-payment:latest
       ports:
       - '9000:9000'
   variables:
@@ -318,7 +318,7 @@ postgres:
     description: Part of ACME Fitness cloud demo.
     website: https://github.com/vmwarecloudadvocacy/acme_fitness_demo
     publisher: nooga
-    icon: https://visualpharm.com/assets/690/Clear%20Shopping%20Cart-595b40b65ba036ed117d19bf.svg
+    icon: https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Postgresql_elephant.svg/1200px-Postgresql_elephant.svg.png
   containers:
     postgres:
       image: postgres:12.1-alpine
@@ -345,7 +345,7 @@ redis-db:
     description: Part of ACME Fitness cloud demo.
     website: https://github.com/vmwarecloudadvocacy/acme_fitness_demo
     publisher: nooga
-    icon: https://visualpharm.com/assets/690/Clear%20Shopping%20Cart-595b40b65ba036ed117d19bf.svg
+    icon: https://cdn4.iconfinder.com/data/icons/redis-2/1451/Untitled-2-512.png
   containers:
     db:
       image: bitnami/redis
@@ -364,7 +364,7 @@ user:
     description: Part of ACME Fitness cloud demo.
     website: https://github.com/vmwarecloudadvocacy/acme_fitness_demo
     publisher: nooga
-    icon: https://visualpharm.com/assets/690/Clear%20Shopping%20Cart-595b40b65ba036ed117d19bf.svg
+    icon: https://visualpharm.com/assets/128/User-595b40b85ba036ed117dc943.svg
   containers:
     user:
       image: gcr.io/vmwarecloudadvocacy/acmeshop-user:2.0.1
@@ -419,7 +419,7 @@ user-db:
     description: Part of ACME Fitness cloud demo.
     website: https://github.com/vmwarecloudadvocacy/acme_fitness_demo
     publisher: nooga
-    icon: https://visualpharm.com/assets/690/Clear%20Shopping%20Cart-595b40b65ba036ed117d19bf.svg
+    icon: https://visualpharm.com/assets/530/Database-595b40b75ba036ed117d7bf6.svg
   containers:
     db:
       image: gcr.io/vmwarecloudadvocacy/acmeshop-user-db:latest
@@ -444,7 +444,7 @@ user-redis-db:
     description: Part of ACME Fitness cloud demo.
     website: https://github.com/vmwarecloudadvocacy/acme_fitness_demo
     publisher: nooga
-    icon: https://visualpharm.com/assets/690/Clear%20Shopping%20Cart-595b40b65ba036ed117d19bf.svg
+    icon: https://cdn4.iconfinder.com/data/icons/redis-2/1451/Untitled-2-512.png
   containers:
     db:
       image: bitnami/redis
