@@ -1,0 +1,150 @@
+namespace: acme-fitness-demo
+acme-fitness-demo:
+  defines: runnable
+  metadata:
+    name: acme-fitness-demo
+    description: >-
+      A shopping site application including services for users, products,
+      orders, and payments
+    icon: https://emojiapi.dev/api/v1/robot.svg
+  containers:
+    acme-fitness-demo:
+      build: .
+  services:
+    front-end:
+      container: acme-fitness-demo
+      port: 3000
+      host-port: 3000
+      publish: false
+      protocol: TCP
+      description: Front-end port for the application
+    cart:
+      container: acme-fitness-demo
+      port: 5000
+      host-port: 5000
+      publish: false
+      protocol: TCP
+      description: Port for the cart service
+    order:
+      container: acme-fitness-demo
+      port: 6000
+      host-port: 6000
+      publish: false
+      protocol: TCP
+      description: Port for the order service
+    catalog:
+      container: acme-fitness-demo
+      port: 8082
+      host-port: 8082
+      publish: false
+      protocol: TCP
+      description: Port for the catalog service
+    user:
+      container: acme-fitness-demo
+      port: 8083
+      host-port: 8083
+      publish: false
+      protocol: TCP
+      description: Port for the user service
+    payment:
+      container: acme-fitness-demo
+      port: 9000
+      host-port: 9000
+      publish: false
+      protocol: TCP
+      description: Port for the payment service
+  connections:
+    catalog-db:
+      target: mongodb/mongodb
+      service: mongodb
+    user-db:
+      target: mongodb/mongodb
+      service: mongodb
+    user-redis-db:
+      target: redis/redis
+      service: redis-svc
+    redis-db:
+      target: redis/redis
+      service: redis-svc
+    postgres:
+      target: postgresql/db
+      service: postgres
+    jaeger:
+      target: acmefit/jaeger
+      service: jaeger
+  variables:
+    mongo-initdb-root-username:
+      env: MONGO_INITDB_ROOT_USERNAME
+      type: string
+      description: MongoDB root username
+      value: mongoadmin
+    mongo-initdb-root-password:
+      env: MONGO_INITDB_ROOT_PASSWORD
+      type: string
+      description: MongoDB root password
+      value: '!!!SETME-USE-SECRETS!!!'
+    mongo-initdb-database:
+      env: MONGO_INITDB_DATABASE
+      type: string
+      description: Initial MongoDB database
+      value: acmefit
+    redis-password:
+      env: REDIS_PASSWORD
+      type: string
+      description: Reddis password
+      value: '!!!SETME-USE-SECRETS!!!'
+    postgres-password:
+      env: POSTGRES_PASSWORD
+      type: string
+      description: Password for the Postgres user
+      value: '!!!SETME-USE-SECRETS!!!'
+    postgres-user:
+      env: POSTGRES_USER
+      type: string
+      description: Username for the Postgres user
+      value: postgres
+    postgres-db:
+      env: POSTGRES_DB
+      type: string
+      description: Initial Postgres database
+      value: postgres
+    jaeger-agent-host:
+      env: JAEGER_AGENT_HOST
+      type: string
+      description: Host for the Jaeger agent, used for distributed tracing
+      value: <- connection-hostname("jaeger")
+    jaeger-agent-port:
+      env: JAEGER_AGENT_PORT
+      type: int
+      description: Port for the Jaeger agent, used for traffic with Jaeger
+      value: <- connection-port("jaeger")
+    catalog-db-username:
+      env: CATALOG_DB_USERNAME
+      type: string
+      description: Username for the catalog database
+      value: mongoadmin
+    catalog-db-password:
+      env: CATALOG_DB_PASSWORD
+      type: string
+      description: Password for the catalog database
+      value: '!!!SETME-USE-SECRETS!!!'
+    users-db-username:
+      env: USERS_DB_USERNAME
+      type: string
+      description: Username for the users database
+      value: mongoadmin
+    users-db-password:
+      env: USERS_DB_PASSWORD
+      type: string
+      description: Password for the users database
+      value: '!!!SETME-USE-SECRETS!!!'
+    order-db-username:
+      env: ORDER_DB_USERNAME
+      type: string
+      description: Username for the order database
+      value: postgres
+    order-db-password:
+      env: ORDER_DB_PASSWORD
+      type: string
+      description: Password for the order database
+      value: '!!!SETME-USE-SECRETS!!!'
