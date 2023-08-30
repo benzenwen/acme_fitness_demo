@@ -1,0 +1,549 @@
+namespace: example-3
+
+cart:
+  defines: runnable
+  inherits: acmefit/cart
+  monk-ui:
+    position:
+      - 1506
+      - 344
+    name: cart
+    id: 11186
+    connections:
+      11186__n__redis__c__11302__n__redis-db:
+        hasVolume: false
+        hasLB: false
+      11186__n__user__c__74214__n__user:
+        hasVolume: false
+        hasLB: false
+      11186__n__jaeger__c__55959__n__jaeger:
+        hasVolume: false
+        hasLB: false
+    isPrivate: true
+    path: acmefit/cart
+    type: runnable
+  containers:
+    cart:
+      image: gcr.io/vmwarecloudadvocacy/acmeshop-cart
+      ports: []
+      paths: []
+  services:
+    cart:
+      container: cart
+      protocol: TCP
+      port: <- $cart-port
+      publish: false
+  depends[override]:
+    wait-for:
+      runnables:
+        - example-3/redis-db
+        - example-3/user
+        - example-3/jaeger
+      timeout: 60
+  connections[override]:
+    redis:
+      runnable: example-3/redis-db
+      service: redis-db
+    user:
+      runnable: example-3/user
+      service: user
+    jaeger:
+      runnable: example-3/jaeger
+      service: jaeger
+  variables:
+    auth-mode: '1'
+    cart-port: 5000
+    redis-password: secret
+
+catalog:
+  defines: runnable
+  inherits: acmefit/catalog
+  monk-ui:
+    position:
+      - 1060
+      - 122
+    name: catalog
+    id: 60165
+    connections:
+      60165__n__catalog-db__c__94215__n__catalog-db:
+        hasVolume: false
+        hasLB: false
+      60165__n__user__c__74214__n__user:
+        hasVolume: false
+        hasLB: false
+      60165__n__jaeger__c__55959__n__jaeger:
+        hasVolume: false
+        hasLB: false
+    isPrivate: true
+    path: acmefit/catalog
+    type: runnable
+  containers:
+    catalog:
+      image: gcr.io/vmwarecloudadvocacy/acmeshop-catalog
+      ports: []
+      paths: []
+  services:
+    catalog:
+      container: catalog
+      protocol: TCP
+      port: <- $catalog-port
+      publish: false
+  depends[override]:
+    wait-for:
+      runnables:
+        - example-3/catalog-db
+        - example-3/user
+        - example-3/jaeger
+      timeout: 60
+  connections[override]:
+    catalog-db:
+      runnable: example-3/catalog-db
+      service: catalog-db
+    user:
+      runnable: example-3/user
+      service: user
+    jaeger:
+      runnable: example-3/jaeger
+      service: jaeger
+  variables:
+    catalog-db-password: secret
+    catalog-db-username: mongoadmin
+    catalog-port: 8082
+    catalog-version: v1
+
+catalog-db:
+  defines: runnable
+  inherits: acmefit/catalog-db
+  monk-ui:
+    position:
+      - 1045
+      - 361
+    name: catalog-db
+    id: 94215
+    connections: {}
+    isPrivate: true
+    path: acmefit/catalog-db
+    type: runnable
+  containers:
+    db:
+      image: gcr.io/vmwarecloudadvocacy/acmeshop-catalog-db
+      ports: []
+      paths: []
+  services:
+    catalog-db:
+      container: db
+      protocol: TCP
+      port: 27017
+      publish: false
+  depends[override]: null
+  connections[override]: null
+  variables:
+    mongo-initdb-database: acmefit
+    mongo-initdb-root-password: secret
+    mongo-initdb-root-username: mongoadmin
+
+front-end:
+  defines: runnable
+  inherits: acmefit/front-end
+  monk-ui:
+    position:
+      - 1954
+      - 103
+    name: front-end
+    id: 63081
+    connections:
+      63081__n__order__c__83125__n__order:
+        hasVolume: false
+        hasLB: false
+      63081__n__users__c__74214__n__user:
+        hasVolume: false
+        hasLB: false
+      63081__n__catalog__c__60165__n__catalog:
+        hasVolume: false
+        hasLB: false
+      63081__n__cart__c__11186__n__cart:
+        hasVolume: false
+        hasLB: false
+    isPrivate: true
+    path: acmefit/front-end
+    type: runnable
+  containers:
+    app:
+      image: gcr.io/vmwarecloudadvocacy/acmeshop-front-end
+      ports: []
+      paths: []
+  services:
+    app:
+      container: app
+      protocol: TCP
+      port: <- $port
+      host-port: <- $port
+      publish: true
+  depends[override]:
+    wait-for:
+      runnables:
+        - example-3/order
+        - example-3/user
+        - example-3/catalog
+        - example-3/cart
+      timeout: 60
+  connections[override]:
+    order:
+      runnable: example-3/order
+      service: order
+    users:
+      runnable: example-3/user
+      service: user
+    catalog:
+      runnable: example-3/catalog
+      service: catalog
+    cart:
+      runnable: example-3/cart
+      service: cart
+  variables:
+    port: 3000
+
+jaeger:
+  defines: runnable
+  inherits: acmefit/jaeger
+  monk-ui:
+    position:
+      - 145
+      - 846
+    name: jaeger
+    id: 55959
+    connections: {}
+    isPrivate: true
+    path: acmefit/jaeger
+    type: runnable
+  containers:
+    jaeger:
+      image: jaegertracing/all-in-one
+      ports: []
+      paths: []
+  services:
+    jaeger:
+      container: jaeger
+      protocol: UDP
+      port: 6831
+      publish: false
+    jaeger-bin:
+      container: jaeger
+      protocol: UDP
+      port: 6832
+      publish: false
+    jaeger-http:
+      container: jaeger
+      protocol: TCP
+      port: 5778
+      publish: false
+    jaeger-ui:
+      container: jaeger
+      protocol: TCP
+      port: 16686
+      host-port: 16686
+      publish: false
+    jaeger-zipkin:
+      container: jaeger
+      protocol: UDP
+      port: 5775
+      publish: false
+  depends[override]: null
+  connections[override]: null
+
+order:
+  defines: runnable
+  inherits: acmefit/order
+  monk-ui:
+    position:
+      - 1518
+      - 638
+    name: order
+    id: 83125
+    connections:
+      83125__n__user__c__74214__n__user:
+        hasVolume: false
+        hasLB: false
+      83125__n__postgres__c__35148__n__postgres:
+        hasVolume: false
+        hasLB: false
+      83125__n__payment__c__71876__n__payment:
+        hasVolume: false
+        hasLB: false
+      83125__n__jaeger__c__55959__n__jaeger:
+        hasVolume: false
+        hasLB: false
+    isPrivate: true
+    path: acmefit/order
+    type: runnable
+  containers:
+    order:
+      image: gcr.io/vmwarecloudadvocacy/order-postgres-tracing
+      ports: []
+      paths: []
+  services:
+    order:
+      container: order
+      protocol: TCP
+      port: <- $order-port
+      publish: false
+  depends[override]:
+    wait-for:
+      runnables:
+        - example-3/user
+        - example-3/postgres
+        - example-3/payment
+        - example-3/jaeger
+      timeout: 60
+  connections[override]:
+    user:
+      runnable: example-3/user
+      service: user
+    postgres:
+      runnable: example-3/postgres
+      service: postgres
+    payment:
+      runnable: example-3/payment
+      service: payment
+    jaeger:
+      runnable: example-3/jaeger
+      service: jaeger
+  variables:
+    auth-mode: '1'
+    order-auth-db: postgres
+    order-db-password: password
+    order-db-username: postgres
+    order-port: 6000
+
+payment:
+  defines: runnable
+  inherits: acmefit/payment
+  monk-ui:
+    position:
+      - 1086
+      - 657
+    name: payment
+    id: 71876
+    connections:
+      71876__n__user__c__74214__n__user:
+        hasVolume: false
+        hasLB: false
+    isPrivate: true
+    path: acmefit/payment
+    type: runnable
+  containers:
+    payment:
+      image: gcr.io/vmwarecloudadvocacy/acmeshop-payment
+      ports: []
+      paths: []
+  services:
+    payment:
+      container: payment
+      protocol: TCP
+      port: <- $payment-port
+      publish: false
+  depends[override]:
+    wait-for:
+      runnables:
+        - example-3/user
+      timeout: 60
+  connections[override]:
+    user:
+      runnable: example-3/user
+      service: user
+  variables:
+    payment-port: 9000
+
+postgres:
+  defines: runnable
+  inherits: acmefit/postgres
+  monk-ui:
+    position:
+      - 1512
+      - 857
+    name: postgres
+    id: 35148
+    connections: {}
+    isPrivate: true
+    path: acmefit/postgres
+    type: runnable
+  containers:
+    postgres:
+      image: postgres
+      ports: []
+      paths: []
+  services:
+    postgres:
+      container: postgres
+      protocol: TCP
+      port: 5432
+      publish: false
+  depends[override]: null
+  connections[override]: null
+  variables:
+    postgres-db: postgres
+    postgres-password: password
+    postgres-user: postgres
+
+redis-db:
+  defines: runnable
+  inherits: acmefit/redis-db
+  monk-ui:
+    position:
+      - 1505
+      - 213
+    name: redis-db
+    id: 11302
+    connections: {}
+    isPrivate: true
+    path: acmefit/redis-db
+    type: runnable
+  containers:
+    db:
+      image: bitnami/redis
+      ports: []
+      paths: []
+  services:
+    redis-db:
+      container: db
+      protocol: TCP
+      port: 6379
+      publish: false
+  depends[override]: null
+  connections[override]: null
+  variables:
+    redis-password: secret
+
+user:
+  defines: runnable
+  inherits: acmefit/user
+  monk-ui:
+    position:
+      - 605
+      - 443
+    name: user
+    id: 74214
+    connections:
+      74214__n__user-redis-db__c__88456__n__user-redis-db:
+        hasVolume: false
+        hasLB: false
+      74214__n__user-db__c__71842__n__user-db:
+        hasVolume: false
+        hasLB: false
+      74214__n__jaeger__c__55959__n__jaeger:
+        hasVolume: false
+        hasLB: false
+    isPrivate: true
+    path: acmefit/user
+    type: runnable
+  containers:
+    user:
+      image: gcr.io/vmwarecloudadvocacy/acmeshop-user
+      ports: []
+      paths: []
+  services:
+    user:
+      container: user
+      protocol: TCP
+      port: <- $users-port
+      publish: false
+  depends[override]:
+    wait-for:
+      runnables:
+        - example-3/user-redis-db
+        - example-3/user-db
+        - example-3/jaeger
+      timeout: 60
+  connections[override]:
+    user-redis-db:
+      runnable: example-3/user-redis-db
+      service: user-redis-db
+    user-db:
+      runnable: example-3/user-db
+      service: user-db
+    jaeger:
+      runnable: example-3/jaeger
+      service: jaeger
+  variables:
+    redis-db-password: secret
+    users-db-password: secret
+    users-db-username: mongoadmin
+    users-port: 8083
+
+user-db:
+  defines: runnable
+  inherits: acmefit/user-db
+  monk-ui:
+    position:
+      - 140
+      - 463
+    name: user-db
+    id: 71842
+    connections: {}
+    isPrivate: true
+    path: acmefit/user-db
+    type: runnable
+  containers:
+    db:
+      image: gcr.io/vmwarecloudadvocacy/acmeshop-user-db
+      ports: []
+      paths: []
+  services:
+    user-db:
+      container: db
+      protocol: TCP
+      port: 27017
+      publish: false
+  depends[override]: null
+  connections[override]: null
+  variables:
+    mongo-initdb-database: acmefit
+    mongo-initdb-root-password: secret
+    mongo-initdb-root-username: mongoadmin
+
+user-redis-db:
+  defines: runnable
+  inherits: acmefit/user-redis-db
+  monk-ui:
+    position:
+      - 600
+      - 600
+    name: user-redis-db
+    id: 88456
+    connections: {}
+    isPrivate: true
+    path: acmefit/user-redis-db
+    type: runnable
+  containers:
+    db:
+      image: bitnami/redis
+      ports: []
+      paths: []
+  services:
+    user-redis-db:
+      container: db
+      protocol: TCP
+      port: 6379
+      publish: false
+  depends[override]: null
+  connections[override]: null
+  variables:
+    redis-password: secret
+
+system:
+  defines: process-group
+  runnable-list:
+    - example-3/cart
+    - example-3/catalog
+    - example-3/catalog-db
+    - example-3/front-end
+    - example-3/jaeger
+    - example-3/order
+    - example-3/payment
+    - example-3/postgres
+    - example-3/redis-db
+    - example-3/user
+    - example-3/user-db
+    - example-3/user-redis-db
+  monk-ui:
+    volumes: {}
