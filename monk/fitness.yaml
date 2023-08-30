@@ -352,7 +352,7 @@ user:
       image: gcr.io/vmwarecloudadvocacy/acmeshop-user:2.0.1
   services:
     user:
-      port: <- $users-port
+      port: 8083
       container: user
       protocol: tcp
   connections:
